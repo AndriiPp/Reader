@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SafariServices
 
 class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -74,6 +75,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     func isFiltering() -> Bool {
         return searchController.isActive && !searchBarIsEmpty()
     }
+    func arrayData() -> [Book]? {
+        return isFiltering() ? filteredBooks : books
+    }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let books = books else {
@@ -101,7 +105,19 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 250
     }
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+      
+        let href = arrayData()![indexPath.row].url!
+
+        let svc = SFSafariViewController(url: URL(string: href)!)
+
+        DispatchQueue.main.async {
+            tableView.reloadData()
+        }
+
+        self.present(svc, animated: true, completion: nil)
+    }
   }
 
 extension MainViewController: UISearchResultsUpdating {
