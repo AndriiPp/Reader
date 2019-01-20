@@ -11,6 +11,8 @@ import SafariServices
 
 class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
+    
+    
     @IBOutlet weak var tableView: UITableView!
     let searchController = UISearchController(searchResultsController: nil)
 
@@ -25,8 +27,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.register(DetailBookTableViewCell.self, forCellReuseIdentifier: cellId)
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = UITableView.automaticDimension
         fetchData()
-        
         searchControl()
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -44,14 +47,12 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         navigationItem.title = "Book Reader"
         let nav = self.navigationController?.navigationBar
         nav?.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white, NSAttributedString.Key.font: UIFont(name: "CourierNewPS-BoldItalicMT", size: 24)!]
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(updateData))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(fetchData))
         self.navigationItem.rightBarButtonItem?.tintColor = UIColor.white
 
     }
-    @objc func updateData(){
-        
-    }
-    func fetchData(){
+    
+    @objc func fetchData(){
         let bookParser = BookParser()
         bookParser.parseBook(url: url) { (books) in
                 self.books = books
@@ -60,6 +61,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
         }
     }
+    
+    
     func searchBarIsEmpty() -> Bool {
     // Returns true if the text is empty or nil
     return searchController.searchBar.text?.isEmpty ?? true
@@ -98,11 +101,14 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         } else {
             if let item = books?[indexPath.item] {
                 cell.item = item
+               
             }
         }
         return cell
     }
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
+    {
         return 250
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

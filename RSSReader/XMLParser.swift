@@ -56,22 +56,22 @@ class BookParser : NSObject, XMLParserDelegate {
     
     
     func parseBook(url : String, completionHandler : (([Book]) -> Void)?){
-        self.parseCompletionHandler = completionHandler
         
-        let request = URLRequest(url: URL(string: url)!)
-        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-            guard let data = data  else {
-            if error != nil {
-                print(error?.localizedDescription as Any)
-                }
-                
-            return
-            }
-            let parser = XMLParser(data: data)
+        self.parseCompletionHandler = completionHandler
+        let requestResource = Resource(baseURL: url, method: Method.GET){(response) -> Data? in
+            return(response)
+        }
+        // Make the request
+        let requestClient = HTTPClient()
+        requestClient.apiRequest(resource: requestResource, failure: { (response, data) in
+            print(response)
+            
+        }) { (response) in
+            let parser = XMLParser(data: response)
             parser.delegate = self
             parser.parse()
         }
-        task.resume()
+
     }
     // MARK :- XML Parser Delegate
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
