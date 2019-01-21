@@ -37,7 +37,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     func searchControl()  {
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "Book Search"
+        searchController.searchBar.placeholder = "Feed Search"
         navigationItem.searchController = searchController
         searchController.searchBar.tintColor = UIColor.white
         definesPresentationContext = true
