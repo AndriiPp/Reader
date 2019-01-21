@@ -43,7 +43,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         definesPresentationContext = true
     }
     func navBar(){
-        navigationItem.title = "Book Reader"
+        navigationItem.title = "Reader"
         let nav = self.navigationController?.navigationBar
         nav?.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white, NSAttributedString.Key.font: UIFont(name: "CourierNewPS-BoldItalicMT", size: 24)!]
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(fetchData))
