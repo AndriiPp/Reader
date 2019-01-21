@@ -26,9 +26,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.register(DetailBookTableViewCell.self, forCellReuseIdentifier: cellId)
         tableView.delegate = self
         tableView.dataSource = self
-        NetworkManager.isUnreachable { (_) in
-            self.invalidAllertController(title: "Invalid Internet", message: "No internet access exist. Try again later")
-        }
         fetchData()
         searchControl()
     }
@@ -59,12 +56,17 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     @objc func fetchData(){
-        let bookParser = BookParser()
-        bookParser.parseBook(url: url) { (books) in
+        NetworkManager.isReachable { (_) in
+            let bookParser = BookParser()
+            bookParser.parseBook(url: self.url) { (books) in
                 self.books = books
-            OperationQueue.main.addOperation {
-                self.tableView.reloadSections(IndexSet(integer: 0), with: .left)
+                OperationQueue.main.addOperation {
+                    self.tableView.reloadSections(IndexSet(integer: 0), with: .left)
+                }
             }
+        }
+        NetworkManager.isUnreachable { (_) in
+            self.invalidAllertController(title: "Invalid Internet", message: "No internet access exist. Try again later")
         }
     }
     
