@@ -26,15 +26,22 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.register(DetailBookTableViewCell.self, forCellReuseIdentifier: cellId)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = UITableView.automaticDimension
+        NetworkManager.isUnreachable { (_) in
+            self.invalidAllertController(title: "Invalid Internet", message: "No internet access exist. Try again later")
+        }
         fetchData()
         searchControl()
     }
     override func viewWillAppear(_ animated: Bool) {
         navBar()
     }
-    func searchControl()  {
+    private func invalidAllertController(title : String, message : String){
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+        alert.addAction(okAction)
+        self.present(alert, animated: true, completion: nil)
+    }
+    private func searchControl()  {
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Feed Search"
@@ -42,7 +49,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         searchController.searchBar.tintColor = UIColor.white
         definesPresentationContext = true
     }
-    func navBar(){
+    private func navBar(){
         navigationItem.title = "Reader"
         let nav = self.navigationController?.navigationBar
         nav?.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white, NSAttributedString.Key.font: UIFont(name: "CourierNewPS-BoldItalicMT", size: 24)!]
@@ -62,22 +69,22 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     
-    func searchBarIsEmpty() -> Bool {
+    private func searchBarIsEmpty() -> Bool {
     // Returns true if the text is empty or nil
     return searchController.searchBar.text?.isEmpty ?? true
     }
     
-    func filterContentForSearchText(_ searchText: String, scope: String = "All") {
+    private func filterContentForSearchText(_ searchText: String, scope: String = "All") {
         filteredBooks = books?.filter({( book : Book) -> Bool in
             return book.title!.lowercased().contains(searchText.lowercased())
         })
         tableView.reloadData()
     }
 
-    func isFiltering() -> Bool {
+    private func isFiltering() -> Bool {
         return searchController.isActive && !searchBarIsEmpty()
     }
-    func arrayData() -> [Book]? {
+    private func arrayData() -> [Book]? {
         return isFiltering() ? filteredBooks : books
     }
 
