@@ -46,7 +46,6 @@ struct HTTPClient {
                         }
                         else {
                             failure(Reason.couldNotParseXML, data)
-                            
                         }
                     }
                     else {

@@ -15,7 +15,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @IBOutlet weak var tableView: UITableView!
     let searchController = UISearchController(searchResultsController: nil)
-
     var cellId = "cellId"
     let url = "https://www.wired.com/feed/rss"
     var searchActive : Bool = false

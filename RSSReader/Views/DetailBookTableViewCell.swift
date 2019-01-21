@@ -38,6 +38,8 @@ class DetailBookTableViewCell : UITableViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
         label.textAlignment = NSTextAlignment.center
+        label.lineBreakMode = .byWordWrapping
+        label.numberOfLines = 1
         label.textColor = UIColor.black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
